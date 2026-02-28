@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Function-Controlled Subway Maps</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+        
+        /* Control Panel Styles */
+        .control-panel {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .control-group {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        .control-group:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        .control-group h3 {
+            margin-top: 0;
+            color: #555;
+        }
+        
+        /* Button Styles */
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .btn-purple { background: #9900aa; color: white; }
+        .btn-red { background: #DD2222; color: white; }
+        .btn-orange { background: #FF9900; color: white; }
+        .btn-blue { background: #0066CC; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        .btn-danger { background: #dc3545; color: white; }
+        
+        /* Map Container Styles */
+        .map-zone {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-height: 600px;
+            display: none; /* Hidden by default */
+        }
+        .map-zone.active {
+            display: block;
+        }
+        .map-zone h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        /* Layout Styles */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+        .full-width {
+            grid-column: 1 / -1;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚇 Function-Controlled Subway Maps</h1>
+        
+        <!-- Control Panel -->
+        <div class="control-panel">
+            <h2>Map Controls</h2>
+            
+            <!-- Example 1: Simple Show/Hide -->
+            <div class="control-group">
+                <h3>1️⃣ Simple Show/Hide - Top Map Container</h3>
+                <button class="btn btn-purple" onclick="SubwayMapController.showMap('top-map', 'purple')">
+                    Show Purple Line
+                </button>
+                <button class="btn btn-red" onclick="SubwayMapController.showMap('top-map', 'red')">
+                    Show Red Line
+                </button>
+                <button class="btn btn-orange" onclick="SubwayMapController.showMap('top-map', 'green')">
+                    Show Circle Line
+                </button>
+                <button class="btn btn-blue" onclick="SubwayMapController.showMap('top-map', 'blue')">
+                    Show Downtown Line
+                </button>
+                <button class="btn btn-secondary" onclick="SubwayMapController.hideMap('top-map')">
+                    Hide Map
+                </button>
+                <button class="btn btn-danger" onclick="SubwayMapController.clearMap('top-map')">
+                    Clear Map
+                </button>
+            </div>
+            
+            <!-- Example 2: Switch Between Maps -->
+            <div class="control-group">
+                <h3>2️⃣ Switch Maps - Middle Container</h3>
+                <button class="btn btn-purple" onclick="SubwayMapController.switchMap('middle-map', 'purple')">
+                    Switch to Purple
+                </button>
+                <button class="btn btn-red" onclick="SubwayMapController.switchMap('middle-map', 'red')">
+                    Switch to Red
+                </button>
+                <button class="btn btn-orange" onclick="SubwayMapController.switchMap('middle-map', 'green')">
+                    Switch to Circle
+                </button>
+                <button class="btn btn-blue" onclick="SubwayMapController.switchMap('middle-map', 'blue')">
+                    Switch to Downtown
+                </button>
+            </div>
+            
+            <!-- Example 3: Multiple Maps -->
+            <div class="control-group">
+                <h3>3️⃣ Show Multiple Maps Side-by-Side</h3>
+                <button class="btn btn-purple" onclick="showTwoMaps('purple', 'red')">
+                    Purple + Red
+                </button>
+                <button class="btn btn-orange" onclick="showTwoMaps('green', 'blue')">
+                    Circle + Downtown
+                </button>
+                <button class="btn btn-secondary" onclick="hideAllSideBySide()">
+                    Hide All
+                </button>
+            </div>
+            
+            <!-- Example 4: Toggle Zones -->
+            <div class="control-group">
+                <h3>4️⃣ Toggle Different Zones</h3>
+                <button class="btn btn-purple" onclick="showZone('zone-1', 'purple')">
+                    Show Zone 1 (Purple)
+                </button>
+                <button class="btn btn-red" onclick="showZone('zone-2', 'red')">
+                    Show Zone 2 (Red)
+                </button>
+                <button class="btn btn-orange" onclick="showZone('zone-3', 'green')">
+                    Show Zone 3 (Circle)
+                </button>
+                <button class="btn btn-secondary" onclick="hideAllZones()">
+                    Hide All Zones
+                </button>
+            </div>
+        </div>
+
+        <!-- Map Containers -->
+        
+        <!-- Top Map Container -->
+        <div class="map-zone active">
+            <h2>📍 Top Map Container</h2>
+            <div id="top-map"></div>
+        </div>
+
+        <!-- Middle Map Container -->
+        <div class="map-zone">
+            <h2>📍 Middle Map Container</h2>
+            <div id="middle-map"></div>
+        </div>
+
+        <!-- Side-by-Side Maps -->
+        <div class="two-column">
+            <div class="map-zone">
+                <h2>📍 Left Side Map</h2>
+                <div id="left-map"></div>
+            </div>
+            <div class="map-zone">
+                <h2>📍 Right Side Map</h2>
+                <div id="right-map"></div>
+            </div>
+        </div>
+
+        <!-- Zone Maps -->
+        <div id="zone-1" class="map-zone">
+            <h2>🗺️ Zone 1 - North Region</h2>
+            <div id="zone-1-map"></div>
+        </div>
+
+        <div id="zone-2" class="map-zone">
+            <h2>🗺️ Zone 2 - Central Region</h2>
+            <div id="zone-2-map"></div>
+        </div>
+
+        <div id="zone-3" class="map-zone">
+            <h2>🗺️ Zone 3 - South Region</h2>
+            <div id="zone-3-map"></div>
+        </div>
+    </div>
+
+    <!-- Custom JavaScript Functions -->
+    <script type="module">
+        // Import the main script to initialize the controller
+        import '/src/main.tsx';
+
+        // Wait for the controller to be available
+        window.addEventListener('load', () => {
+            // Show default map
+            SubwayMapController.showMap('top-map', 'purple');
+        });
+
+        // Custom function: Show two maps side by side
+        window.showTwoMaps = function(leftType, rightType) {
+            document.querySelector('.two-column .map-zone:nth-child(1)').classList.add('active');
+            document.querySelector('.two-column .map-zone:nth-child(2)').classList.add('active');
+            
+            SubwayMapController.showMap('left-map', leftType);
+            SubwayMapController.showMap('right-map', rightType);
+        };
+
+        // Custom function: Hide all side-by-side maps
+        window.hideAllSideBySide = function() {
+            document.querySelectorAll('.two-column .map-zone').forEach(zone => {
+                zone.classList.remove('active');
+            });
+            SubwayMapController.clearMap('left-map');
+            SubwayMapController.clearMap('right-map');
+        };
+
+        // Custom function: Show a specific zone
+        window.showZone = function(zoneId, mapType) {
+            // Hide all zones first
+            document.querySelectorAll('[id^="zone-"]').forEach(zone => {
+                zone.classList.remove('active');
+            });
+            
+            // Show the selected zone
+            const zone = document.getElementById(zoneId);
+            if (zone) {
+                zone.classList.add('active');
+                SubwayMapController.showMap(zoneId + '-map', mapType);
+            }
+        };
+
+        // Custom function: Hide all zones
+        window.hideAllZones = function() {
+            document.querySelectorAll('[id^="zone-"]').forEach(zone => {
+                zone.classList.remove('active');
+            });
+            SubwayMapController.clearMap('zone-1-map');
+            SubwayMapController.clearMap('zone-2-map');
+            SubwayMapController.clearMap('zone-3-map');
+        };
+    </script>
+</body>
+</html>

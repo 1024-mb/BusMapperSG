@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Maps at Different Positions</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+        }
+        
+        /* Header */
+        header {
+            background: white;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        header h1 {
+            margin-bottom: 10px;
+        }
+        
+        /* Main Layout */
+        .page-wrapper {
+            display: grid;
+            grid-template-columns: 250px 1fr 300px;
+            gap: 20px;
+            padding: 20px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+        
+        /* Sidebar */
+        .sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+        }
+        .sidebar h3 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        .sidebar button {
+            width: 100%;
+            padding: 10px;
+            margin: 5px 0;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            background: #f0f0f0;
+            transition: all 0.2s;
+        }
+        .sidebar button:hover {
+            background: #9900aa;
+            color: white;
+        }
+        
+        /* Main Content */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .content-section {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .content-section h2 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+        
+        /* Right Panel */
+        .right-panel {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .panel-widget {
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .panel-widget h4 {
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        /* Map Containers */
+        .map-container {
+            min-height: 500px;
+            margin-top: 15px;
+        }
+        .small-map {
+            min-height: 300px;
+        }
+        .tiny-map {
+            min-height: 200px;
+        }
+        
+        /* Button Styles */
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+        .btn-purple { background: #9900aa; color: white; }
+        .btn-red { background: #DD2222; color: white; }
+        .btn-orange { background: #FF9900; color: white; }
+        .btn-blue { background: #0066CC; color: white; }
+        
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal.active {
+            display: flex;
+        }
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+        }
+        .modal-close {
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            color: #999;
+        }
+        .modal-close:hover {
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header>
+        <h1>🚇 Transit System Dashboard</h1>
+        <p>Maps displayed at different positions on the page</p>
+    </header>
+
+    <!-- Main Page Layout -->
+    <div class="page-wrapper">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <h3>Quick Actions</h3>
+            <button onclick="loadHeroMap('purple')">Load Hero Map (Purple)</button>
+            <button onclick="loadMainMap('red')">Load Main Map (Red)</button>
+            <button onclick="loadSidebarMap('green')">Load Sidebar Map (Green)</button>
+            <button onclick="openModalMap('blue')">Open Modal Map (Blue)</button>
+            <button onclick="clearAllMaps()">Clear All Maps</button>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Hero Section -->
+            <section class="content-section">
+                <h2>🗺️ Position 1: Hero Section</h2>
+                <div class="btn-group">
+                    <button class="btn btn-purple" onclick="loadHeroMap('purple')">Purple</button>
+                    <button class="btn btn-red" onclick="loadHeroMap('red')">Red</button>
+                    <button class="btn btn-orange" onclick="loadHeroMap('green')">Circle</button>
+                    <button class="btn btn-blue" onclick="loadHeroMap('blue')">Downtown</button>
+                </div>
+                <div id="hero-map" class="map-container"></div>
+            </section>
+
+            <!-- Main Content Section -->
+            <section class="content-section">
+                <h2>📍 Position 2: Main Content Area</h2>
+                <p>This map loads in the main content area. Click below to load a different line:</p>
+                <div class="btn-group">
+                    <button class="btn btn-purple" onclick="loadMainMap('purple')">Purple</button>
+                    <button class="btn btn-red" onclick="loadMainMap('red')">Red</button>
+                    <button class="btn btn-orange" onclick="loadMainMap('green')">Circle</button>
+                    <button class="btn btn-blue" onclick="loadMainMap('blue')">Downtown</button>
+                </div>
+                <div id="main-map" class="map-container"></div>
+            </section>
+
+            <!-- Secondary Section -->
+            <section class="content-section">
+                <h2>📊 Position 3: Secondary Content</h2>
+                <p>Comparison view - show two maps side by side</p>
+                <div class="btn-group">
+                    <button class="btn btn-purple" onclick="loadComparison('purple', 'red')">Purple vs Red</button>
+                    <button class="btn btn-orange" onclick="loadComparison('green', 'blue')">Circle vs Downtown</button>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+                    <div id="compare-left" class="map-container small-map"></div>
+                    <div id="compare-right" class="map-container small-map"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Right Panel -->
+        <aside class="right-panel">
+            <!-- Widget 1 -->
+            <div class="panel-widget">
+                <h4>🎯 Position 4: Right Panel (Top)</h4>
+                <button class="btn btn-purple" onclick="loadTopWidget('purple')" style="width: 100%; margin-bottom: 10px;">Load Map</button>
+                <div id="widget-top-map" class="tiny-map"></div>
+            </div>
+
+            <!-- Widget 2 -->
+            <div class="panel-widget">
+                <h4>📌 Position 5: Right Panel (Middle)</h4>
+                <button class="btn btn-red" onclick="loadMiddleWidget('red')" style="width: 100%; margin-bottom: 10px;">Load Map</button>
+                <div id="widget-middle-map" class="tiny-map"></div>
+            </div>
+
+            <!-- Widget 3 -->
+            <div class="panel-widget">
+                <h4>⭐ Position 6: Right Panel (Bottom)</h4>
+                <button class="btn btn-blue" onclick="loadBottomWidget('blue')" style="width: 100%; margin-bottom: 10px;">Load Map</button>
+                <div id="widget-bottom-map" class="tiny-map"></div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modal for Full-Screen Map -->
+    <div id="map-modal" class="modal">
+        <div class="modal-content">
+            <span class="modal-close" onclick="closeModal()">&times;</span>
+            <h2>📍 Position 7: Modal/Popup</h2>
+            <div id="modal-map" class="map-container"></div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="/src/main.tsx"></script>
+    <script>
+        // Function: Load Hero Map
+        function loadHeroMap(mapType) {
+            SubwayMapController.showMap('hero-map', mapType);
+        }
+
+        // Function: Load Main Map
+        function loadMainMap(mapType) {
+            SubwayMapController.showMap('main-map', mapType);
+        }
+
+        // Function: Load Sidebar Map (different position)
+        function loadSidebarMap(mapType) {
+            SubwayMapController.showMap('widget-top-map', mapType);
+        }
+
+        // Function: Load Comparison Maps
+        function loadComparison(leftType, rightType) {
+            SubwayMapController.showMultipleMaps({
+                'compare-left': leftType,
+                'compare-right': rightType
+            });
+        }
+
+        // Function: Load Widget Maps
+        function loadTopWidget(mapType) {
+            SubwayMapController.showMap('widget-top-map', mapType);
+        }
+
+        function loadMiddleWidget(mapType) {
+            SubwayMapController.showMap('widget-middle-map', mapType);
+        }
+
+        function loadBottomWidget(mapType) {
+            SubwayMapController.showMap('widget-bottom-map', mapType);
+        }
+
+        // Function: Open Modal with Map
+        function openModalMap(mapType) {
+            document.getElementById('map-modal').classList.add('active');
+            SubwayMapController.showMap('modal-map', mapType);
+        }
+
+        // Function: Close Modal
+        function closeModal() {
+            document.getElementById('map-modal').classList.remove('active');
+            SubwayMapController.clearMap('modal-map');
+        }
+
+        // Function: Clear All Maps
+        function clearAllMaps() {
+            const containers = [
+                'hero-map', 'main-map', 'compare-left', 'compare-right',
+                'widget-top-map', 'widget-middle-map', 'widget-bottom-map'
+            ];
+            containers.forEach(id => SubwayMapController.clearMap(id));
+        }
+
+        // Load default maps on page load
+        window.addEventListener('load', () => {
+            SubwayMapController.showMap('hero-map', 'purple');
+        });
+    </script>
+</body>
+</html>

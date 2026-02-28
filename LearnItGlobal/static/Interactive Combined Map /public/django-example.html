@@ -1,0 +1,228 @@
+<!-- 
+    Django Template Example: Function-Controlled Subway Maps
+    Save this as: templates/subway_maps.html
+-->
+
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Transit Maps - {{ page_title }}</title>
+    
+    <!-- Include the built CSS from your static files -->
+    <link rel="stylesheet" href="{% static 'subway-maps/index.css' %}">
+    
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .map-container {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            min-height: 600px;
+        }
+        .hidden { display: none; }
+        .btn {
+            padding: 10px 20px;
+            margin: 5px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+        }
+        .btn-primary { background: #9900aa; color: white; }
+        .btn-secondary { background: #6c757d; color: white; }
+        
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            border-bottom: 2px solid #ddd;
+            margin-bottom: 20px;
+        }
+        .nav-tab {
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            background: #f0f0f0;
+            border-radius: 8px 8px 0 0;
+        }
+        .nav-tab.active {
+            background: #9900aa;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>{{ page_title|default:"Transit System Maps" }}</h1>
+
+        <!-- Example 1: Django Context Variable to Control Map -->
+        {% if show_main_map %}
+        <div class="map-container">
+            <h2>Main Transit Line</h2>
+            <div id="main-map"></div>
+        </div>
+        {% endif %}
+
+        <!-- Example 2: Tabs for Different Lines -->
+        <div class="map-container">
+            <h2>Select a Line</h2>
+            <div class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('purple')">Purple Line</button>
+                <button class="nav-tab" onclick="switchTab('red')">Red Line</button>
+                <button class="nav-tab" onclick="switchTab('green')">Circle Line</button>
+                <button class="nav-tab" onclick="switchTab('blue')">Downtown Line</button>
+            </div>
+            <div id="tabbed-map"></div>
+        </div>
+
+        <!-- Example 3: Different Maps for Different Sections -->
+        <div class="row">
+            <div class="col-md-6">
+                <div class="map-container">
+                    <h2>Northbound Routes</h2>
+                    <button class="btn btn-primary" onclick="loadNorthbound()">Load Northbound</button>
+                    <div id="northbound-map"></div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="map-container">
+                    <h2>Southbound Routes</h2>
+                    <button class="btn btn-primary" onclick="loadSouthbound()">Load Southbound</button>
+                    <div id="southbound-map"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Example 4: Conditional Maps Based on Django Data -->
+        {% for route in routes %}
+        <div class="map-container" id="route-{{ route.id }}-container">
+            <h2>{{ route.name }}</h2>
+            <button class="btn btn-primary" onclick="loadRoute('{{ route.id }}', '{{ route.map_type }}')">
+                View {{ route.name }} Map
+            </button>
+            <div id="route-{{ route.id }}-map"></div>
+        </div>
+        {% endfor %}
+
+        <!-- Example 5: User-triggered Map Display -->
+        <div class="map-container">
+            <h2>Plan Your Route</h2>
+            <select id="route-selector" onchange="handleRouteSelection()">
+                <option value="">-- Select a route --</option>
+                <option value="purple">Purple Line (North-East)</option>
+                <option value="red">Red Line</option>
+                <option value="green">Circle Line</option>
+                <option value="blue">Downtown Line</option>
+            </select>
+            <div id="selected-route-map" class="hidden"></div>
+        </div>
+    </div>
+
+    <!-- Include the built JavaScript from your static files -->
+    <script type="module" src="{% static 'subway-maps/index.js' %}"></script>
+
+    <!-- Your custom JavaScript functions -->
+    <script>
+        // Wait for the page to load
+        window.addEventListener('load', function() {
+            // Example 1: Show main map with Django context
+            {% if show_main_map %}
+            SubwayMapController.showMap('main-map', '{{ main_map_type|default:"purple" }}');
+            {% endif %}
+
+            // Example 2: Initialize tabbed map with default
+            SubwayMapController.showMap('tabbed-map', 'purple');
+        });
+
+        // Tab switching function
+        function switchTab(mapType) {
+            // Update tab active state
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            // Switch the map
+            SubwayMapController.switchMap('tabbed-map', mapType);
+        }
+
+        // Load northbound routes
+        function loadNorthbound() {
+            SubwayMapController.showMap('northbound-map', 'purple');
+        }
+
+        // Load southbound routes
+        function loadSouthbound() {
+            SubwayMapController.showMap('southbound-map', 'red');
+        }
+
+        // Load route by ID (from Django loop)
+        function loadRoute(routeId, mapType) {
+            const containerId = 'route-' + routeId + '-map';
+            SubwayMapController.showMap(containerId, mapType);
+        }
+
+        // Handle route selection dropdown
+        function handleRouteSelection() {
+            const selector = document.getElementById('route-selector');
+            const container = document.getElementById('selected-route-map');
+            const mapType = selector.value;
+            
+            if (mapType) {
+                container.classList.remove('hidden');
+                SubwayMapController.showMap('selected-route-map', mapType);
+            } else {
+                container.classList.add('hidden');
+                SubwayMapController.clearMap('selected-route-map');
+            }
+        }
+
+        // Example: AJAX call to load map based on user data
+        function loadUserPreferredRoute(userId) {
+            fetch(`/api/user/${userId}/preferred-route/`)
+                .then(response => response.json())
+                .then(data => {
+                    SubwayMapController.showMap('main-map', data.map_type);
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        // Example: Show multiple maps based on Django context
+        {% if show_comparison %}
+        window.addEventListener('load', function() {
+            SubwayMapController.showMultipleMaps({
+                'northbound-map': 'purple',
+                'southbound-map': 'red'
+            });
+        });
+        {% endif %}
+    </script>
+</body>
+</html>
+
+<!--
+    DJANGO VIEWS.PY EXAMPLE:
+    
+    def subway_maps_view(request):
+        context = {
+            'page_title': 'City Transit Maps',
+            'show_main_map': True,
+            'main_map_type': 'purple',
+            'show_comparison': False,
+            'routes': [
+                {'id': 1, 'name': 'Express Route', 'map_type': 'purple'},
+                {'id': 2, 'name': 'Local Route', 'map_type': 'red'},
+            ]
+        }
+        return render(request, 'subway_maps.html', context)
+-->

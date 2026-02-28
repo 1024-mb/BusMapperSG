@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiple Subway Maps Example</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 40px;
+        }
+        .map-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .map-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .map-section h2 {
+            margin-top: 0;
+            color: #333;
+            border-bottom: 2px solid #eee;
+            padding-bottom: 10px;
+        }
+        .map-container {
+            min-height: 800px;
+        }
+        .full-width-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 40px;
+        }
+        .instructions {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 40px;
+        }
+        .instructions h3 {
+            margin-top: 0;
+            color: #0066cc;
+        }
+        .instructions code {
+            background: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚇 Interactive Subway Maps Demo</h1>
+        
+        <div class="instructions">
+            <h3>How to Use in Django</h3>
+            <p>To integrate these maps into your Django website, simply add a div with the <code>data-subway-map</code> attribute:</p>
+            <pre><code>&lt;div data-subway-map="purple"&gt;&lt;/div&gt;
+&lt;div data-subway-map="red"&gt;&lt;/div&gt;
+&lt;div data-subway-map="green"&gt;&lt;/div&gt;
+&lt;div data-subway-map="blue"&gt;&lt;/div&gt;</code></pre>
+            <p>Available maps: <strong>purple</strong>, <strong>red</strong>, <strong>green</strong>, <strong>blue</strong></p>
+        </div>
+
+        <!-- Example 1: Full Width Map -->
+        <div class="full-width-section">
+            <h2>Full Width Example - Purple Line (North-East Line)</h2>
+            <div class="map-container" data-subway-map="purple"></div>
+        </div>
+
+        <!-- Example 2: Side by Side Maps -->
+        <h2 style="text-align: center; margin: 40px 0 20px;">Side-by-Side Layout</h2>
+        <div class="map-grid">
+            <div class="map-section">
+                <h2>🟣 Purple Line</h2>
+                <div class="map-container" data-subway-map="purple"></div>
+            </div>
+            
+            <div class="map-section">
+                <h2>🔴 Red Line</h2>
+                <div class="map-container" data-subway-map="red"></div>
+            </div>
+        </div>
+
+        <!-- Example 3: Another Row -->
+        <div class="map-grid">
+            <div class="map-section">
+                <h2>🟠 Circle Line (Orange)</h2>
+                <div class="map-container" data-subway-map="green"></div>
+            </div>
+            
+            <div class="map-section">
+                <h2>🔵 Downtown Line (Blue)</h2>
+                <div class="map-container" data-subway-map="blue"></div>
+            </div>
+        </div>
+
+        <!-- Example 4: Custom Container ID (Legacy Method) -->
+        <div class="full-width-section">
+            <h2>Using Custom Container ID</h2>
+            <p>This demonstrates the legacy method using a specific container ID:</p>
+            <div id="subway-map-container"></div>
+        </div>
+    </div>
+
+    <!-- In Django, you would use: 
+    <link rel="stylesheet" href="{% static 'subway-maps/index.css' %}">
+    <script type="module" src="{% static 'subway-maps/index.js' %}"></script>
+    -->
+    
+    <!-- For this example, we'll use the dev server paths -->
+    <script type="module" src="/src/main.tsx"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+asgiref @ file:///Users/ec2-user/buildout/croot/asgiref_1761943767136/work
+certifi==2026.1.4
+charset-normalizer==3.4.4
+dj-database-url==3.1.2
+Django @ file:///opt/miniconda3/conda-bld/django_1764329193430/work
+gunicorn==25.1.0
+idna==3.11
+packaging==26.0
+psycopg @ file:///Users/ec2-user/croot/psycopg-split_1769677300327/work/psycopg
+psycopg2-binary==2.9.11
+requests==2.32.5
+sqlparse @ file:///opt/miniconda3/conda-bld/sqlparse_1764240029220/work
+urllib3==2.6.3
+whitenoise==6.12.0

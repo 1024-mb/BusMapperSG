@@ -49,14 +49,14 @@ export function SubwayMap() {
   return (
     <div className="w-full min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-br from-purple-50 to-purple-100" style={{ backgroundColor: '#f3e8f7', height: '650px'}}>
       <div className="mb-8">
-        <h1 className="text-4xl font-bold text-black mb-2" style={{marginLeft: '2vw'}}>North-East Line</h1>
+        <h1 className="text-4xl font-bold text-black mb-2" style={{marginLeft: '50px'}}>North-East Line</h1>
       </div>
 
       <div className="flex gap-8 w-full max-w-7xl" >
         {/* Subway Map */}
         <div className="flex-1 bg-white rounded-2xl shadow-2xl p-8">
           <svg
-            viewBox={"-40 0 400 550"}
+            viewBox={"-10 0 400 550"}
             className="w-full h-auto"
             style={{ height: '600px' }}
           >

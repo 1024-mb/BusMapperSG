@@ -143,7 +143,7 @@ export function BusMap({ busNumber }: BusMapProps) {
     return (
       <div className="w-full min-h-screen flex flex-col items-center justify-center p-8 bg-gradient-to-br from-green-50 to-green-100" style={{ backgroundColor: '#E6F5EC', padding: '7.5px', height: '800' }}>
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-black mb-2">
+          <h1 className="text-4xl font-bold text-black mb-2" style={{marginLeft: '40px'}}>
             Bus {busNumber} - Route
           </h1>
         </div>

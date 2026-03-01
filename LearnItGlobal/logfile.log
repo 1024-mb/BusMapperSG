@@ -1,0 +1,12 @@
+waiting for server to start....2026-02-23 07:21:01.991 +08 [2200] LOG:  starting PostgreSQL 14.20 (Homebrew) on aarch64-apple-darwin25.1.0, compiled by Apple clang version 17.0.0 (clang-1700.4.4.1), 64-bit
+2026-02-23 07:21:01.995 +08 [2200] LOG:  listening on IPv6 address "::1", port 5432
+2026-02-23 07:21:01.995 +08 [2200] LOG:  listening on IPv4 address "127.0.0.1", port 5432
+2026-02-23 07:21:01.995 +08 [2200] LOG:  listening on Unix socket "/tmp/.s.PGSQL.5432"
+2026-02-23 07:21:02.001 +08 [2201] LOG:  database system was interrupted; last known up at 2026-02-22 19:21:54 +08
+2026-02-23 07:21:02.070 +08 [2201] LOG:  database system was not properly shut down; automatic recovery in progress
+2026-02-23 07:21:02.071 +08 [2201] LOG:  redo starts at 0/19AB0B0
+2026-02-23 07:21:02.071 +08 [2201] LOG:  invalid record length at 0/19AB198: wanted 24, got 0
+2026-02-23 07:21:02.071 +08 [2201] LOG:  redo done at 0/19AB160 system usage: CPU: user: 0.00 s, system: 0.00 s, elapsed: 0.00 s
+2026-02-23 07:21:02.076 +08 [2200] LOG:  database system is ready to accept connections
+ done
+server started

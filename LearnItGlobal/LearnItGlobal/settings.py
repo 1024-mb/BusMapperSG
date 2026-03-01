@@ -25,7 +25,7 @@ STATICFILES_DIRS = [
 # where Django COLLECTS static files (prod)
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-
+ALLOWED_HOSTS = ['192.168.1.100', 'localhost', '127.0.0.1']
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 

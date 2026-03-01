@@ -9,6 +9,8 @@ from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.template.loaders import cached
 
+
+
 from .models import *
 from datetime import timedelta
 import datetime
@@ -131,6 +133,7 @@ def main(request, action=None):
     Coordinates["LastTrain"] = last_service
 
 
+
     for bus in Buses:
         amenities = (
             BusStopAmenity.objects
@@ -148,6 +151,7 @@ def main(request, action=None):
         ])
 
     for trainstation in TrainStations:
+
         lines = (
             TrainDetail.objects
             .filter(TrainStationCode=trainstation.TrainStationCode)
@@ -198,30 +202,9 @@ def main(request, action=None):
         ])
 
 
-    if action:
-        #direction north = True
-        # want to get the data about the locations of each of the things in the form
-        # {
-        # 'ATM': [[coord1, coord2], [coord3, coord4],....]
-        #
-        # }
-        # direction south = False in database
-        if action == 'explore':
-            return render(request, 'main.html', context={'Action': 'explore',
-                                                                       'Amenities': Coordinates,
-                                                                        'TrainTimings': times})
 
-        elif action == 'directions':
-            return render(request, 'main.html', context={'Action': 'directions',
-                                                                      'Amenities': Coordinates,
-                                                                      'TrainTimings': times})
-
-        else:
-            return HttpResponse("Not Found")
-
-    else:
-        return render(request, context={'Action': 'directions',
-                                'Amenities': 'Coordinates'})
+    return render(request, 'main.html', context={'Amenities': Coordinates,
+                                                                    'TrainTimings': times})
 
 
 def get_bus_stops(request):
@@ -247,6 +230,8 @@ def get_bus_stops(request):
 
 
 def get_bus_routes(request):
+    serviceNo = request.GET.get("service")
+
     cached = cache.get("bus_routes")
     response = []
     skip = 0
@@ -263,10 +248,10 @@ def get_bus_routes(request):
 
             result = json.loads(api_result.text)
 
-            if result['value'] == []:
+            response.extend(result['value'])
+            if not result['value']:
                 break
 
-            response.extend(result['value'])
             skip+=500
 
 
@@ -276,15 +261,18 @@ def get_bus_routes(request):
     cache.set("bus_routes", response)
 
     final_dict = {}
-    final_dict['value'] = response
+
+    response = {'value': response}
+    final_dict['value'] = [response1 for response1 in response['value'] if response1['ServiceNo'] == serviceNo]
 
     return JsonResponse(final_dict, safe=False)
+
 
 def get_bus_stations(request):
     cached = cache.get("bus_stations")
     response = []
-    skip = 0
 
+    """
     if not cached:
         headers = {
             "AccountKey": "DYcp2xF6QNKde4zceePCkw==",
@@ -304,9 +292,10 @@ def get_bus_stations(request):
 
     else:
         response = cached
+    """
 
-    with open("bus_stations.txt", "w") as f:
-        f.write(json.dumps(response))
+    with open("bus_stations.txt", 'r') as f:
+        response = json.load(f)
 
     cache.set("bus_stations", response)
 
@@ -314,4 +303,5 @@ def get_bus_stations(request):
     final_dict['value'] = response
 
     return JsonResponse(final_dict, safe=False)
+
 

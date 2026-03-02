@@ -49,10 +49,9 @@ In short, it makes daily commuting safer, faster, and more inclusive, which is a
 ---
 ## Example Screenshots
 <p float="left">
-  <img src="screenshot1.png" width="100" />
-  <img src="screenshot2.png" width="100" />
-  <img src="screenshot3.png" width="100" />
-  <img src="screenshot4.png" width="100" />
+  <img src="Screenshot 2026-03-02 at 9.31.04 AM.png" width="300" />
+  <img src="Screenshot 2026-03-02 at 9.33.18 AM.png" width="300" />
+  <img src="Screenshot 2026-03-02 at 9.34.39 AM.png" width="300" />
 </p>
 
 ## Technologies/Frameworks

@@ -23,6 +23,7 @@ arrival times, crowding info, and station amenities.
 - [Prequisites](#Prerequisites)
 - [Setup Instructions](#Setup)
 - [Routes](#Routes)
+- [Data Sources](#Data-Sources)
 
 ---
 
@@ -125,6 +126,12 @@ Open: `http://127.0.0.1:8000/`
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
 
 ---
+
+## Data Sources
+- LTA Datamall is the source for all public transport-related data from the Singapore Government
+- The Google Maps JS API is overlayed with self-sourced amenity data
+- AI-powered timetabling (generated through the analysis of hundreds of public documents is used to create the train animation.
+
 
 
 If you create new pages, place templates in `LearnItGlobal/LearnItGlobal/templates/` and extend `base.html` the same way.

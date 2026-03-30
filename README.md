@@ -12,7 +12,6 @@ arrival times, crowding info, and station amenities.
 
 ⚠️ **50-second demo:** https://youtu.be/xBYDm0gNGUM  
 
-🎥 **Live Link:** https://learnitglobalhackathon.onrender.com/ 
 
 ---
 
